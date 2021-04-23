@@ -98,6 +98,9 @@ val cur_label: unit -> label
 
 type rec_flag = Nonrecursive | Recursive
 
+type effects = No_effects | Arbitrary_effects
+type coeffects = No_coeffects | Has_coeffects
+
 type phantom_defining_expr =
   (* CR-soon mshinwell: Convert this to [Targetint.OCaml.t] (or whatever the
      representation of "target-width OCaml integers of type [int]"
@@ -144,6 +147,9 @@ and operation =
       { name: string;
         ret: machtype;
         alloc: bool;
+        builtin: bool;
+        effects: effects;
+        coeffects: coeffects;
         ty_args: exttype list;
         (** The [machtype] is the machine type of the result.
             The [exttype list] describes the unboxing types of the arguments.

@@ -66,7 +66,7 @@ let env_empty = {
 
 let oper_result_type = function
     Capply ty -> ty
-  | Cextcall(_s, ty_res, _ty_args, _alloc) -> ty_res
+  | Cextcall { ret = ty; } -> ty
   | Cload (c, _) ->
       begin match c with
       | Word_val -> typ_val
@@ -444,8 +444,8 @@ method select_operation op args _dbg =
     (Icall_imm { func; }, rem)
   | (Capply _, _) ->
     (Icall_ind, args)
-  | (Cextcall(func, ty_res, ty_args, alloc), _) ->
-    Iextcall { func; ty_res; ty_args; alloc; }, args
+  | (Cextcall { name = func; alloc; ty_args; ret = ty_res }, _) ->
+    Iextcall { func; alloc; ty_args; ty_res }, args
   | (Cload (chunk, _mut), [arg]) ->
       let (addr, eloc) = self#select_addressing chunk arg in
       (Iload(chunk, addr), [eloc])
